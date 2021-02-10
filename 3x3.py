@@ -28,16 +28,34 @@ def tabuleiro():
     print('  ' + posicoes[2][0] + '  |  ' + posicoes[2][1] + '  |  ' + posicoes[2][2] + '  ')
     print('     |     |     ')
     
-def controle(key, cursorX, cursorY, posicoes):   
-    if key == DOWN and cursorY < 2 and posicoes[cursorY+1][cursorX] == ' ':
-        cursorY += 1 
-    elif key == UP and cursorY > 0 and posicoes[cursorY-1][cursorX] == ' ':
-        cursorY -= 1
-    elif key == LEFT and cursorX > 0 and posicoes[cursorY][cursorX-1] == ' ':
-        cursorX -= 1
-    elif key == RIGHT and cursorX < 2 and posicoes[cursorY][cursorX+1] == ' ':
-        cursorX += 1 
+def controle(key, cursorX, cursorY, posicoes):
+    if key == DOWN:
+        if cursorY < 2 and posicoes[cursorY+1][cursorX] == ' ':
+            cursorY += 1 
+        
+        elif cursorY == 2 and posicoes[0][cursorX] == ' ': # 'Teleportar' pela parede
+            cursorY = 0
+
+    elif key == UP:
+        if cursorY > 0 and posicoes[cursorY-1][cursorX] == ' ':
+            cursorY -= 1
+        elif cursorY == 0 and posicoes[2][cursorX] == ' ':
+            cursorY = 2
+
+    elif key == LEFT:
+        if cursorX > 0 and posicoes[cursorY][cursorX-1] == ' ':
+            cursorX -= 1
+        
+        elif cursorX == 0 and posicoes[cursorY][2] == ' ':
+            cursorX = 2
+
+    elif key == RIGHT:
+        if cursorX < 2 and posicoes[cursorY][cursorX+1] == ' ':
+            cursorX += 1 
     
+        elif cursorX == 2 and posicoes[cursorY][0] == ' ':
+            cursorX = 0
+            
     return cursorX, cursorY
 
 def jogada(cursorX, cursorY, rodada):
@@ -45,8 +63,12 @@ def jogada(cursorX, cursorY, rodada):
         posicoes[cursorY][cursorX] = 'O'
     else:
         posicoes[cursorY][cursorX] = 'X'
+
     rodada = checaVitoria(rodada)
-    cursorY, cursorX = encontraCasaVazia()
+
+    if (rodada > 0): # Ainda ha jogo
+        cursorY, cursorX = encontraCasaVazia()
+
     return cursorX, cursorY, rodada
 
 def encontraCasaVazia():
@@ -81,16 +103,24 @@ def checaVitoria(rodada):
                 posicoes[0][i], posicoes[1][i], posicoes[2][i] = colorize(vencedor)
                 vitoria(vencedor)
                 return -1
+    if(rodada == 9): # Empate
+        vitoria('empate')
+        return 0
     
-    rodada += 1 # Se nao houve vitoria, acrescenta-se uma rodada
-    return rodada
+    else:
+        rodada += 1 # Se nao houve vitoria, acrescenta-se uma rodada
+        return rodada
 
 def colorize(vencedor):
         posicao1 = posicao2 = posicao3 = COLOR + vencedor + RESETCOLOR
         return posicao1, posicao2, posicao3
 
 def vitoria(vencedor):
-        print('\n\n' + COLOR + vencedor + RESETCOLOR + ' ganhou!')
+        if (vencedor == 'empate'):
+            print('\n\n Empate.')
+        else:
+            print('\n\n' + COLOR + vencedor + RESETCOLOR + ' ganhou!')
+
 
 
 posicoes = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
