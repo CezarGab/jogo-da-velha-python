@@ -1,16 +1,17 @@
 import time 
 import terminedia as TM
 
+FPS = 0.3 # Afeta a velocidade da mudanca de quadros
+
+# Comandos e constantes
 UP = 'w'
 DOWN = 's'
 LEFT = 'a'
 RIGHT = 'd'
-
-FPS = 0.3
-
-COLOR = "\033[1;36m" #+ "\033[;1m" # Ciano e Bold
+SELECT = 'l'
+COLOR = "\033[1;36m" # Ciano
+BOLD  = "\033[;1m" # Bold
 RESETCOLOR = "\033[0;0m"
-
 
 def tabuleiro():
     print('\n\n')
@@ -55,20 +56,20 @@ def encontraCasaVazia():
                 return j, i
         
 def checaVitoria(rodada):
-    if (posicoes[0][0] == posicoes[1][1] == posicoes[2][2] != ' '):
+    if (posicoes[0][0] == posicoes[1][1] == posicoes[2][2] != ' '): # Checa diagonal principal
         vencedor = posicoes[0][0]
         posicoes[0][0], posicoes[1][1], posicoes[2][2] = colorize(vencedor)
         vitoria(vencedor)
         return -1
     
-    elif(posicoes[1][1] == posicoes[0][2] == posicoes[2][1] != ' '):
+    elif(posicoes[1][1] == posicoes[0][2] == posicoes[2][0] != ' '): # Checa diagonal secundaria
         vencedor = posicoes[1][1]
-        posicoes[1][1], posicoes[0][2], posicoes[2][1] = colorize(vencedor)
+        posicoes[1][1], posicoes[0][2], posicoes[2][0] = colorize(vencedor)
         vitoria(vencedor)
         return -1
 
     else:
-        for i in range(3):
+        for i in range(3): # Checa vitoria nas horizontais e verticais
             if (posicoes[i][0] == posicoes[i][1] == posicoes[i][2] != ' '):
                 vencedor = posicoes[i][0]
                 posicoes[i][0], posicoes[i][1], posicoes[i][2] = colorize(vencedor)
@@ -81,7 +82,7 @@ def checaVitoria(rodada):
                 vitoria(vencedor)
                 return -1
     
-    rodada += 1
+    rodada += 1 # Se nao houve vitoria, acrescenta-se uma rodada
     return rodada
 
 def colorize(vencedor):
@@ -98,18 +99,17 @@ cursorY = 0
 rodada = 1 
 
 while (rodada > 0):
-    for i in range(1):
-        posicoes[cursorY][cursorX] = '▮'
-        tabuleiro()
-        time.sleep(FPS)
-        posicoes[cursorY][cursorX] = ' '
-        tabuleiro()
-        time.sleep(FPS)
+    posicoes[cursorY][cursorX] = '▮'
+    tabuleiro()
+    time.sleep(FPS)
+    posicoes[cursorY][cursorX] = ' '
+    tabuleiro()
+    time.sleep(FPS)
 
     with TM.keyboard():
         key = TM.inkey()
 
-        if (key == 'l'):
+        if (key == SELECT):
             cursorX, cursorY, rodada = jogada(cursorX, cursorY, rodada)        
         else: 
             cursorX, cursorY = controle(key, cursorX, cursorY, posicoes)
