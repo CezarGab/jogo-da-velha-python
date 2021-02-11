@@ -29,5 +29,7 @@ Controles:
 `w, a, s, d` -  Movimentam o cursor no tabuleiro.
 `l` - Insere a jogada no tabuleiro.
 
+>Reduzir o tamanho do Terminal utilizado para 50x14 melhora a visualização.
+
 ## Screenshots:
----
+--

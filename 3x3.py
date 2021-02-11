@@ -145,6 +145,3 @@ while (rodada > 0):
             cursorX, cursorY = controle(key, cursorX, cursorY, posicoes)
 
 tabuleiro()
-
-
-
